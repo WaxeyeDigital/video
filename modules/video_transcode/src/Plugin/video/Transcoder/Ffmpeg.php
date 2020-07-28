@@ -19,7 +19,7 @@ use Drupal\video_transcode\TranscoderBase;
  */
 
 class FFmpeg extends TranscoderBase {
-  
+
   /**
    * {@inheritdoc}
    */
@@ -28,7 +28,7 @@ class FFmpeg extends TranscoderBase {
       ['format' => 'mpeg4', 'url' => 'http://s3.amazonaws.com/bucket/video.mp4', 'id' => 1]
     ];
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -37,6 +37,6 @@ class FFmpeg extends TranscoderBase {
       ['id' => 1, 'url' => 'http://s3.amazonaws.com/bucket/video/frame_0000.png']
     ];
   }
-  
-  
+
+
 }

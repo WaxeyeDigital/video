@@ -121,7 +121,8 @@ abstract class VideoRemoteStreamWrapper extends ReadOnlyStream {
     $realpath = realpath($path);
     if (!$realpath) {
       // This file does not yet exist.
-      $realpath = realpath(dirname($path)) . '/' . drupal_basename($path);
+      $file_system = \Drupal::service('file_system');
+      $realpath = realpath(dirname($path)) . '/' . $file_system->basename($path);
     }
     $directory = realpath($this->getDirectoryPath());
     if (!$realpath || !$directory || strpos($realpath, $directory) !== 0) {

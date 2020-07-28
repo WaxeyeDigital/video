@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Render\PlainTextOutput;
 use GuzzleHttp\ClientInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * A base for the provider plugins.
@@ -121,11 +122,11 @@ abstract class ProviderPluginBase implements ProviderPluginInterface, ContainerF
     $local_uri = $this->getLocalThumbnailUri();
     if (!file_exists($local_uri)) {
       $thumb_dir = $this->getUploadLocation();
-      file_prepare_directory($thumb_dir, FILE_CREATE_DIRECTORY);
+      \Drupal::service('file_system')->prepareDirectory($thumb_dir, FileSystemInterface::CREATE_DIRECTORY);
       $remote_url = $this->getRemoteThumbnailUrl();
       if ($remote_url) {
         $thumbnail = $this->httpClient->request('GET', $this->getRemoteThumbnailUrl());
-        file_unmanaged_save_data((string) $thumbnail->getBody(), $local_uri);
+        \Drupal::service('file_system')->saveData((string) $thumbnail->getBody(), $local_uri);
       }
     }
   }

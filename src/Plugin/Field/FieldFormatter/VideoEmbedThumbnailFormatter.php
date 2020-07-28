@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\file\Entity\File;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 
 /**
  * Plugin implementation of the thumbnail field formatter.
@@ -32,6 +33,13 @@ class VideoEmbedThumbnailFormatter extends FormatterBase implements ContainerFac
    * @var \Drupal\video_embed_field\ProviderManagerInterface
    */
   protected $providerManager;
+
+  /**
+   * The stream wrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected $streamWrapperManager;
 
   /**
    * Class constant for linking to content.
@@ -69,7 +77,7 @@ class VideoEmbedThumbnailFormatter extends FormatterBase implements ContainerFac
     foreach ($items as $delta => $item) {
       $file = File::load($item->target_id);
       $metadata = isset($item->data) ? unserialize($item->data) : [];
-      $scheme = file_uri_scheme($file->getFileUri());
+      $scheme = $this->streamWrapperManager->getScheme($file->getFileUri());
       $provider = $this->providerManager->loadProviderFromStream($scheme, $file, $metadata, $widget_settings);
       $url = FALSE;
       if ($this->getSetting('link_image_to') == static::LINK_CONTENT) {
@@ -145,10 +153,13 @@ class VideoEmbedThumbnailFormatter extends FormatterBase implements ContainerFac
    *   Third party settings.
    * @param \Drupal\video\ProviderManagerInterface $provider_manager
    *   The video embed provider manager.
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   *   The stream wrapper manager.
    */
-  public function __construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, ProviderManagerInterface $provider_manager) {
+  public function __construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, ProviderManagerInterface $provider_manager, StreamWrapperManagerInterface $stream_wrapper_manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->providerManager = $provider_manager;
+    $this->streamWrapperManager = $stream_wrapper_manager;
   }
 
   /**
@@ -163,7 +174,8 @@ class VideoEmbedThumbnailFormatter extends FormatterBase implements ContainerFac
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('video.provider_manager')
+      $container->get('video.provider_manager'),
+      $container->get('stream_wrapper_manager')
     );
   }
 
