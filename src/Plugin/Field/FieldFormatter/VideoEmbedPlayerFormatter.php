@@ -9,7 +9,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\video\ProviderManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\file\Entity\File;
-use Drupal\Core\File\FileSystem;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
@@ -42,7 +41,8 @@ class VideoEmbedPlayerFormatter extends FormatterBase implements ContainerFactor
       $file = File::load($item->target_id);
       if(!$file) continue;
       $metadata = isset($item->data) ? unserialize($item->data) : [];
-      $scheme = \Drupal::service('file_system')->uriScheme($file->getFileUri());
+      $scheme = \Drupal::service('stream_wrapper_manager')->getScheme($file->getFileUri());
+
       $provider = $this->providerManager->loadProviderFromStream($scheme, $file, $metadata);
       if($provider){
         $element[$delta] = $provider->renderEmbedCode($settings);
@@ -146,7 +146,7 @@ class VideoEmbedPlayerFormatter extends FormatterBase implements ContainerFactor
       $container->get('video.provider_manager')
     );
   }
-  
+
   /**
    * {@inheritdoc}
    */
