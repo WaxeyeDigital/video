@@ -168,11 +168,9 @@ class VideoPlayerFormatter extends VideoPlayerFormatterBase implements Container
 
     // Collect cache tags to be added for each item in the field.
     foreach ($files as $delta => $file) {
-      $video_uri = $file->getFileUri();
-      $relative_url = file_url_transform_relative(file_create_url($video_uri));
       $elements[$delta] = [
         '#theme' => 'video_player_formatter',
-        '#items' => [Url::fromUserInput($relative_url)],
+        '#items' => [file_create_url($file->getFileUri())],
         '#player_attributes' => $this->getSettings(),
       ];
     }
