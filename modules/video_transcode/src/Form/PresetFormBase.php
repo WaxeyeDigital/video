@@ -600,12 +600,12 @@ class PresetFormBase extends EntityForm {
 
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity...
-      $this->messenger()->addStatus($this->t('Preset %label has been updated.', array('%label' => $preset->label())));
+      drupal_set_message($this->t('Preset %label has been updated.', array('%label' => $preset->label())));
       $this->logger('video_transcode')->notice('Preset %label has been updated.', ['%label' => $preset->label(), 'link' => $edit_link]);
     }
     else {
       // If we created a new entity...
-      $this->messenger()->addStatus($this->t('Preset %label has been added.', array('%label' => $preset->label())));
+      drupal_set_message($this->t('Preset %label has been added.', array('%label' => $preset->label())));
       $this->logger('video_transcode')->notice('Preset %label has been added.', ['%label' => $preset->label(), 'link' => $edit_link]);
     }
 

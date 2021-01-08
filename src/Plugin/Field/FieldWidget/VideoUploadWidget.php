@@ -10,7 +10,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
-use Drupal\Component\Utility\Environment;
 
 /**
  * Plugin implementation of the 'video_upload' widget.
@@ -73,7 +72,7 @@ class VideoUploadWidget extends FileWidget {
       '#type' => 'textfield',
       '#title' => t('Maximum upload size'),
       '#default_value' => $settings['max_filesize'],
-      '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', array('%limit' => format_size(Environment::getUploadMaxSize()))),
+      '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', array('%limit' => format_size(file_upload_max_size()))),
       '#size' => 10,
       '#element_validate' => [[get_class($this), 'validateMaxFilesize']],
       '#weight' => 5,
@@ -252,7 +251,7 @@ class VideoUploadWidget extends FileWidget {
     $settings = $this->getSettings();
 
     // Cap the upload size according to the PHP limit.
-    $max_filesize = Bytes::toInt(Environment::getUploadMaxSize());
+    $max_filesize = Bytes::toInt(file_upload_max_size());
     if (!empty($settings['max_filesize'])) {
       $max_filesize = min($max_filesize, Bytes::toInt($settings['max_filesize']));
     }
