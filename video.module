@@ -32,7 +32,7 @@ function video_file_access(EntityInterface $entity, $operation, AccountInterface
       foreach ($provider_manager->getDefinitions() as $definition) {
         $stream_wrappers[] = $definition['id'];
       }
-      $scheme = \Drupal::service('stream_wrapper_manager')->getScheme($entity->getFileUri());
+      $scheme = \Drupal::service('file_system')->uriScheme($entity->getFileUri());
       if (in_array($scheme, $stream_wrappers)) {
         return AccessResult::allowedIfHasPermission($account, 'access content');
       }
