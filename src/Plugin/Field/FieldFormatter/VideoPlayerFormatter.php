@@ -170,7 +170,7 @@ class VideoPlayerFormatter extends VideoPlayerFormatterBase implements Container
     foreach ($files as $delta => $file) {
       $elements[$delta] = [
         '#theme' => 'video_player_formatter',
-        '#items' => [file_create_url($file->getFileUri())],
+        '#items' => [\Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri())],
         '#player_attributes' => $this->getSettings(),
       ];
     }

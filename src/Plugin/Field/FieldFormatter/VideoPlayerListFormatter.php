@@ -42,7 +42,7 @@ class VideoPlayerListFormatter extends VideoPlayerFormatter implements Container
     // Collect cache tags to be added for each item in the field.
     $video_items = [];
     foreach ($files as $delta => $file) {
-      $video_items[] = file_create_url($file->getFileUri());
+      $video_items[] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
     }
     $elements[] = [
       '#theme' => 'video_player_formatter',
