@@ -61,9 +61,9 @@ class VideoPlayerListFormatter extends VideoPlayerFormatter implements Container
     }
     else{
       $form_mode = 'default';
-      $entity_form_display = \Drupal::entityTypeManager()
-        ->getStorage('entity_form_display')
-        ->load($field_definition->getTargetEntityTypeId() . '.' . $field_definition->getTargetBundle() . '.' . $form_mode);
+      $entity_form_display = \Drupal::service('entity_display.repository')
+      ->getFormDisplay(
+        $field_definition->getTargetEntityTypeId(), $field_definition->getTargetBundle(), $form_mode);
       if (!$entity_form_display) {
         $entity_form_display = \Drupal::entityTypeManager()
           ->getStorage('entity_form_display')
