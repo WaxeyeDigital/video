@@ -1,14 +1,16 @@
 <?php
 
-namespace Drupal\video\Plugin\migrate\cckfield;
+namespace Drupal\video\Plugin\migrate\field;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
- * @MigrateCckField(
+ * @MigrateField(
  *   id = "video",
- *   core = {7}
+ *   core = {7},
+ *   source_module = "video",
+ *   destination_module = "video",
  * )
  */
 class VideoItem extends FieldPluginBase {
@@ -34,7 +36,7 @@ class VideoItem extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function processCckFieldValues(MigrationInterface $migration, $field_name, $data) {
+  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
     $process = [
       'plugin' => 'iterator',
       'source' => $field_name,
