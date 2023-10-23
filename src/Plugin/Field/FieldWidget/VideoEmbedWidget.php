@@ -79,7 +79,7 @@ class VideoEmbedWidget extends FileWidget {
     ];
     return $element;
   }
-  
+
   /**
    * Form API callback
    *
@@ -101,14 +101,14 @@ class VideoEmbedWidget extends FileWidget {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = t('Providers : @allowed_providers<br/>Thumbnail directory : @file_directory', 
+    $summary[] = t('Providers : @allowed_providers<br/>Thumbnail directory : @file_directory',
     [
       '@allowed_providers' => implode(', ', array_filter($this->getSetting('allowed_providers'))),
       '@file_directory' => $this->getSetting('uri_scheme') . '://' . $this->getSetting('file_directory'),
     ]);
     return $summary;
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -235,7 +235,7 @@ class VideoEmbedWidget extends FileWidget {
     }
     return $elements;
   }
-  
+
   /**
    * Form API callback: Processes a group of file_generic field elements.
    *
@@ -291,7 +291,7 @@ class VideoEmbedWidget extends FileWidget {
 
     return $element;
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -313,10 +313,10 @@ class VideoEmbedWidget extends FileWidget {
     else {
       $element += parent::formElement($items, $delta, $element, $form, $form_state);
     }
-    
+
     return $element;
   }
-  
+
   /**
    * Form API callback: Processes a file_generic field element.
    *
@@ -332,7 +332,7 @@ class VideoEmbedWidget extends FileWidget {
     $element['data']['#type'] = 'hidden';
     return $element;
    }
-  
+
   /**
    * Form element validation handler for URL alias form element.
    *
@@ -352,7 +352,7 @@ class VideoEmbedWidget extends FileWidget {
       $form_state->setError($element, t('Could not find a video provider to handle the given URL.'));
     }
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -389,10 +389,11 @@ class VideoEmbedWidget extends FileWidget {
             $definition  = $provider_matches['definition'];
             $matches = $provider_matches['matches'];
             $uri = $definition['stream_wrapper'] . '://' . $matches['id'];
-            
+
             $storage = \Drupal::entityTypeManager()->getStorage('file');
             $results = $storage->getQuery()
                     ->condition('uri', $uri)
+                    ->accessCheck(TRUE)
                     ->execute();
             if(!(count($results) > 0)){
               $user = \Drupal::currentUser();
@@ -418,7 +419,7 @@ class VideoEmbedWidget extends FileWidget {
           unset($values[$delta]);
         }
       }
-      $values = $this->massageFormValues($values, $form, $form_state);      
+      $values = $this->massageFormValues($values, $form, $form_state);
       // Assign the values and remove the empty ones.
       $items->setValue($values);
       $items->filterEmptyItems();
